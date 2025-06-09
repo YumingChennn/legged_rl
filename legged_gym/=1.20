@@ -1,0 +1,30 @@
+Retrieving notices: - \ | / - done
+Channels:
+ - defaults
+Platform: linux-64
+Collecting package metadata (repodata.json): | / - \ | / - \ done
+Solving environment: / - done
+
+## Package Plan ##
+
+  environment location: /home/csl/miniconda3/envs/legged_rl
+
+  added / updated specs:
+    - numpy
+
+
+The following NEW packages will be INSTALLED:
+
+  numpy-base         pkgs/main/linux-64::numpy-base-1.24.3-py38h060ed82_1 
+
+The following packages will be UPDATED:
+
+  numpy                      pypi/pypi::numpy-1.19.5-pypi_0 --> pkgs/main/linux-64::numpy-1.24.3-py38hf6e8229_1 
+
+
+Proceed ([y]/n)? 
+
+Downloading and Extracting Packages: ...working... done
+Preparing transaction: | done
+Verifying transaction: - done
+Executing transaction: | done
