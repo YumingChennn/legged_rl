@@ -52,6 +52,7 @@ CATKIN_IGNORE
 
 libs/libtorch/
 
+docs/
 legged_hw/
 legged_mujoco/
 legged_rl/
