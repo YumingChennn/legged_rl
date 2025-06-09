@@ -35,17 +35,11 @@ You can refer to https://github.com/leggedrobotics/legged_gym for detailed infor
 Train go2 with [HIMLoco](https://github.com/OpenRobotLab/HIMLoco/blob/main/projects/himloco/README.md) algorithm: 
 ```bash
 # in legged_rl\legged_gym
-python legged_gym/scripts/train.py --task=go2_him --headless --max_iterations=1000
+python legged_gym/scripts/train.py --task=big_reddog --headless --max_iterations=1000
 ```
 
 After training, play once to export the jit file:
 ```bash
 # in legged_rl\legged_gym
-python legged_gym/scripts/play_him.py --task=go2_him
-```
-
-Export rl config: 
-```bash
-# in legged_rl
-python legged_gym/legged_gym/scripts/export_config.py --target_dir=legged_robot_example/unitree_go2_description/config --task=go2_him
+python legged_gym/scripts/play_him.py --task=big_reddog
 ```
