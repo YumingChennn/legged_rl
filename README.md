@@ -31,8 +31,8 @@ You can refer to https://github.com/leggedrobotics/legged_gym for detailed infor
 
 # Usage
 
-## Train and export
-Train go2 with [HIMLoco](https://github.com/OpenRobotLab/HIMLoco/blob/main/projects/himloco/README.md) algorithm: 
+## Train and play
+Train big reddog with PPO algorithm: 
 ```bash
 # in legged_rl\legged_gym
 python legged_gym/scripts/train.py --task=big_reddog --headless --max_iterations=1000
@@ -41,5 +41,5 @@ python legged_gym/scripts/train.py --task=big_reddog --headless --max_iterations
 After training, play once to export the jit file:
 ```bash
 # in legged_rl\legged_gym
-python legged_gym/scripts/play_him.py --task=big_reddog
+python legged_gym/scripts/play.py --task=big_reddog
 ```
