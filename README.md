@@ -1,3 +1,5 @@
+This repo refer to [zitongbai/legged_rl](https://github.com/zitongbai/legged_rl.git)
+
 # Installation
 
 This repo is tested on **Ubuntu 22.04** with ROS Humble.
@@ -17,11 +19,13 @@ Now you have built the deployment part of this repo. The following is for traini
    - make sure you have activated the conda env
    - `cd isaacgym/python && pip install -e .`
    - Try running an example `cd examples && python 1080_balls_of_solitude.py`
-   - For troubleshooting check docs `isaacgym/docs/index.html`)
+   - For troubleshooting check docs `isaacgym/docs/index.html`
 4. Install rsl_rl (PPO implementation)
-   - We have a forked version in this repo.
+   - remove existed rsl_rl folder
+   - Go to [rsl_rl](https://github.com/zitongbai/rsl_rl.git) and clone the repo
    - make sure you have activated the conda env
-   - In this repo: `cd rsl_rl && git checkout v1.0.2 && pip install -e .` 
+   - In rsl_rl: `git checkout v1.0.2 && pip install -e .` 
+   - check back to 6d5b057: `git checkout "6d5b057"`
 5. Install legged_gym
    - We have a forked version in this repo.
    - make sure you have activated the conda env
@@ -32,6 +36,7 @@ You can refer to https://github.com/leggedrobotics/legged_gym for detailed infor
 # Usage
 
 ## Train and play
+### reddog
 Train big reddog with PPO algorithm: 
 ```bash
 # in legged_rl\legged_gym
@@ -42,4 +47,17 @@ After training, play once to export the jit file:
 ```bash
 # in legged_rl\legged_gym
 python legged_gym/scripts/play.py --task=big_reddog
+```
+
+### wheel-biped robot
+Train wheel-biped robot with HimLoco algorithm: 
+```bash
+# in legged_rl\legged_gym
+python legged_gym/scripts/train.py --task=bipedal_him --headless --max_iterations=1500
+```
+
+After training, play once to export the jit file:
+```bash
+# in legged_rl\legged_gym
+python legged_gym/scripts/play_him_bipedal.py --task=bipedal_him
 ```
