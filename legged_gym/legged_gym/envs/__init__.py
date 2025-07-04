@@ -60,6 +60,9 @@ from .reddog_big.big_reddog_him import BigReddogHimRough
 from .reddog_big.big_reddog_rough_config import BigReddogRoughCfg, BigReddogRoughCfgPPO
 from .reddog_big.big_reddog import BigReddog
 
+from .bipedal.bipedal_him_config import BipedalHimRoughCfg, BipedalHimRoughCfgPPO
+from .bipedal.bipedal_him import BipedalHimRough
+
 import os
 
 from legged_gym.utils.task_registry import task_registry
@@ -79,3 +82,5 @@ task_registry.register( "reddog", Reddog, ReddogCfg(), ReddogCfgPPO() )
 
 task_registry.register( "big_reddog_him", BigReddogHimRough, BigReddogHimRoughCfg(), BigReddogHimRoughCfgPPO() )
 task_registry.register( "big_reddog", BigReddog, BigReddogRoughCfg(), BigReddogRoughCfgPPO() )
+
+task_registry.register( "bipedal_him", BipedalHimRough, BipedalHimRoughCfg(), BipedalHimRoughCfgPPO() )
