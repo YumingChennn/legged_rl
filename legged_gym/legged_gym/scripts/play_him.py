@@ -78,7 +78,7 @@ def play(args, x_vel=0.5, y_vel=0.0, yaw_vel=0.0):
     joint_index = 1 # which joint is used for logging
     stop_state_log = 100 # number of steps before plotting states
     stop_rew_log = env.max_episode_length + 1 # number of steps before print average episode rewards
-    camera_position = np.array(env_cfg.viewer.pos, dtype=float64)
+    camera_position = np.array(env_cfg.viewer.pos, dtype=np.float64)
     camera_vel = np.array([1., 1., 0.])
     camera_direction = np.array(env_cfg.viewer.lookat) - np.array(env_cfg.viewer.pos)
     img_idx = 0
@@ -132,4 +132,4 @@ if __name__ == '__main__':
     RECORD_FRAMES = False
     MOVE_CAMERA = False
     args = get_args()
-    play(args, x_vel=0.5, y_vel=0.0, yaw_vel=0.0)
+    play(args, x_vel=1.0, y_vel=0.0, yaw_vel=0.0)

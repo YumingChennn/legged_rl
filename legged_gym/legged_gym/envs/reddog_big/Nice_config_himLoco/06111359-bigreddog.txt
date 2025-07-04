@@ -97,9 +97,9 @@ class BigReddogHimRoughCfg( LeggedRobotCfg ):
             ang_vel_xy = -0.05
             orientation = -5.0
             dof_acc = -2.5e-7
-            joint_power = -2e-5 # 2e-5
+            joint_power = -2e-5
             base_height = -10.0
-            foot_clearance = -0.1 #-0.01
+            foot_clearance = -0.0 #-0.01
             action_rate = -0.01
             smoothness = -0.01
             feet_air_time =  0.0

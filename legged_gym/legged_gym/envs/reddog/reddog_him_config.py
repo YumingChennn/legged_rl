@@ -63,17 +63,17 @@ class ReddogHimRoughCfg( LeggedRobotCfg ):
         use_actuator_network = False
         # actuator_net_file = '{LEGGED_GYM_ROOT_DIR}/resources/actuator_nets/go2_actuator_net.pt'
 
-    class commands( LeggedRobotCfg.commands ):
-            curriculum = True # True
-            max_curriculum = 3.0 # 2.0
-            num_commands = 4 # default: lin_vel_x, lin_vel_y, ang_vel_yaw, heading (in heading mode ang_vel_yaw is recomputed from heading error)
-            resampling_time = 5. # 10. # time before command are changed[s]
-            heading_command = True # if true: compute ang vel command from heading error
-            class ranges( LeggedRobotCfg.commands.ranges):
-                lin_vel_x = [-0.5, 0.5] # min max [m/s]
-                lin_vel_y = [-0.5, 0.5]   # min max [m/s]
-                ang_vel_yaw = [-0.8, 0.8]    # min max [rad/s]
-                heading = [-3.14, 3.14]
+    # class commands( LeggedRobotCfg.commands ):
+    #         curriculum = True # True
+    #         max_curriculum = 1.0 # 2.0
+    #         num_commands = 4 # default: lin_vel_x, lin_vel_y, ang_vel_yaw, heading (in heading mode ang_vel_yaw is recomputed from heading error)
+    #         resampling_time = 5. # 10. # time before command are changed[s]
+    #         heading_command = True # if true: compute ang vel command from heading error
+    #         class ranges( LeggedRobotCfg.commands.ranges):
+    #             lin_vel_x = [-0.5, 0.5] # min max [m/s]
+    #             lin_vel_y = [-0.5, 0.5]   # min max [m/s]
+    #             ang_vel_yaw = [-0.8, 0.8]    # min max [rad/s]
+    #             heading = [-3.14, 3.14]
 
     # class terrain( LeggedRobotCfg.terrain ):
     #     mesh_type = 'plane' # "heightfield" # none, plane, heightfield or trimesh
@@ -89,77 +89,77 @@ class ReddogHimRoughCfg( LeggedRobotCfg ):
         self_collisions = 1 # 1 to disable, 0 to enable...bitwise filter
         flip_visual_attachments = False # Some .obj meshes must be flipped from y-up to z-up
 
-    class domain_rand(LeggedRobotCfg.domain_rand):
-        randomize_payload_mass = True 
-        payload_mass_range = [-0.3, 0.3]
+    # class domain_rand(LeggedRobotCfg.domain_rand):
+        # randomize_payload_mass = True 
+        # payload_mass_range = [-0.3, 0.3]
 
-        randomize_com_displacemreward_scalesent = True
-        com_displacement_range = [-0.03, 0.03] # [-0.05, 0.05] 
+        # randomize_com_displacemreward_scalesent = True
+        # com_displacement_range = [-0.03, 0.03] # [-0.05, 0.05] 
 
-        randomize_link_mass = False # True
-        link_mass_range = [0.9, 1.1]
+        # randomize_link_mass = False # True
+        # link_mass_range = [0.9, 1.1]
         
-        randomize_friction = True
-        friction_range = [0.2, 1.25] # [0.2, 1.25]
+        # randomize_friction = True
+        # friction_range = [0.2, 1.25] # [0.2, 1.25]
         
-        randomize_restitution = False
-        restitution_range = [0., 1.0]
+        # randomize_restitution = False
+        # restitution_range = [0., 1.0]
         
-        randomize_motor_strength = True
-        motor_strength_range = [0.1, 0.3]
+        # randomize_motor_strength = True
+        # motor_strength_range = [0.1, 0.3]
         
-        randomize_kp = True
-        kp_range = [0.9, 1.1]
+        # randomize_kp = True
+        # kp_range = [0.9, 1.1]
         
-        randomize_kd = False
-        kd_range = [0.9, 1.1]
+        # randomize_kd = False
+        # kd_range = [0.9, 1.1]
         
-        randomize_initial_joint_pos = True
-        initial_joint_pos_range = [0.5, 1.5]
+        # randomize_initial_joint_pos = True
+        # initial_joint_pos_range = [0.5, 1.5]
         
-        disturbance = True
-        disturbance_range = [-30.0, 30.0]
-        disturbance_interval = 8
+        # disturbance = True
+        # disturbance_range = [-30.0, 30.0]
+        # disturbance_interval = 8
         
-        push_robots = True
-        push_interval_s = 16
-        max_push_vel_xy = 1.
+        # push_robots = True
+        # push_interval_s = 16
+        # max_push_vel_xy = 1.
 
-        delay = True
+        # delay = True
 
   
-    class rewards( LeggedRobotCfg.rewards ):
-        class scales:
-            termination = -0.0
-            tracking_lin_vel = 1.0
-            tracking_ang_vel = 0.5
-            lin_vel_z = -2.0
-            ang_vel_xy = -0.05
-            orientation = -0.2
-            dof_acc = 0.0
-            joint_power = -2e-5
-            base_height = -1.0
-            foot_clearance = -0.01
-            action_rate = -0.01
-            smoothness = -0.01
-            feet_air_time =  0.8 # 0.0
-            collision = -0.0
-            feet_stumble = -0.0
-            stand_still = -0.
-            torques = -0.0
-            dof_vel = -0.0
-            dof_pos_limits = -0.0
-            dof_vel_limits = -0.0
-            torque_limits = -0.0
+    # class rewards( LeggedRobotCfg.rewards ):
+    #     class scales:
+    #         termination = -0.0
+    #         tracking_lin_vel = 1.0
+    #         tracking_ang_vel = 0.5
+    #         lin_vel_z = -2.0
+    #         ang_vel_xy = -0.05
+    #         orientation = -0.2
+    #         dof_acc = 0.0
+    #         joint_power = -2e-5
+    #         base_height = -1.0
+    #         foot_clearance = -0.01
+    #         action_rate = -0.01
+    #         smoothness = -0.01
+    #         feet_air_time =  0.8 # 0.0
+    #         collision = -0.0
+    #         feet_stumble = -0.0
+    #         stand_still = -0.
+    #         torques = -0.0
+    #         dof_vel = -0.0
+    #         dof_pos_limits = -0.0
+    #         dof_vel_limits = -0.0
+    #         torque_limits = -0.0
 
-        only_positive_rewards = False # if true negative total rewards are clipped at zero (avoids early termination problems)
-        tracking_sigma = 0.25 # tracking reward = exp(-error^2/sigma)
-        soft_dof_pos_limit = 1. # percentage of urdf limits, values above this limit are penalized
-        soft_dof_vel_limit = 1.
-        soft_torque_limit = 1.
-        base_height_target = 0.12
-        max_contact_force = 100. # forces above this value are penalized
-        clearance_height_target = -0.20
+    #     only_positive_rewards = False # if true negative total rewards are clipped at zero (avoids early termination problems)
+    #     tracking_sigma = 0.25 # tracking reward = exp(-error^2/sigma)
+    #     soft_dof_pos_limit = 1. # percentage of urdf limits, values above this limit are penalized
+    #     soft_dof_vel_limit = 1.
+    #     soft_torque_limit = 1.
+    #     base_height_target = 0.12
+    #     max_contact_force = 100. # forces above this value are penalized
+    #     clearance_height_target = -0.20
 
 class ReddogHimRoughCfgPPO( LeggedRobotCfgPPO ):
     class algorithm( LeggedRobotCfgPPO.algorithm ):

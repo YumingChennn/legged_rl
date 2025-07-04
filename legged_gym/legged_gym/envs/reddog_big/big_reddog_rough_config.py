@@ -42,10 +42,10 @@ class BigReddogRoughCfg( LeggedRobotCfg ):
     class init_state( LeggedRobotCfg.init_state ):
         pos = [0.0, 0.0, 0.4] # x,y,z [m]
         default_joint_angles = { # = target angles [rad] when action = 0.0
-            'FL_hip_joint':   -0.1,  # [rad]
-            'FR_hip_joint':    0.1,  # [rad]
-            'RL_hip_joint':   -0.1,   # [rad]
-            'RR_hip_joint':    0.1,  # [rad]
+            'FL_hip_joint':    0.1,  # [rad]
+            'FR_hip_joint':   -0.1,  # [rad]
+            'RL_hip_joint':    0.1,   # [rad]
+            'RR_hip_joint':   -0.1,  # [rad]
 
             'FL_thigh_joint':  0.4,     # [rad]
             'FR_thigh_joint':  0.4,     # [rad]
@@ -70,17 +70,17 @@ class BigReddogRoughCfg( LeggedRobotCfg ):
         use_actuator_network = False
         actuator_net_file = "{LEGGED_GYM_ROOT_DIR}/resources/actuator_nets/anydrive_v3_lstm.pt"
 
-    class commandsl( LeggedRobotCfg.commands ):
-        curriculum = True
-        max_curriculum = 1.
-        num_commands = 4 # default: lin_vel_x, lin_vel_y, ang_vel_yaw, heading (in heading mode ang_vel_yaw is recomputed from heading error)
-        resampling_time = 4. # time before command are changed[s]
-        heading_command = False # if true: compute ang vel command from heading error
-        class ranges:
-            lin_vel_x = [-1.0, 1.0] # min max [m/s]
-            lin_vel_y = [-1.0, 1.0]   # min max [m/s]
-            ang_vel_yaw = [-1.5, 1.5]    # min max [rad/s]
-            heading = [-3.14, 3.14]
+    # class commands( LeggedRobotCfg.commands ):
+    #     curriculum = True
+    #     max_curriculum = 1.
+    #     num_commands = 4 # default: lin_vel_x, lin_vel_y, ang_vel_yaw, heading (in heading mode ang_vel_yaw is recomputed from heading error)
+    #     resampling_time = 4. # time before command are changed[s]
+    #     heading_command = False # if true: compute ang vel command from heading error
+    #     class ranges:
+    #         lin_vel_x = [-1.0, 1.0] # min max [m/s]
+    #         lin_vel_y = [-1.0, 1.0]   # min max [m/s]
+    #         ang_vel_yaw = [-1.5, 1.5]    # min max [rad/s]
+    #         heading = [-3.14, 3.14]
 
     class asset( LeggedRobotCfg.asset ):
         file = '{LEGGED_GYM_ROOT_DIR}/resources/robots/bigreddog/urdf/big_reddog.urdf'
@@ -98,8 +98,8 @@ class BigReddogRoughCfg( LeggedRobotCfg ):
     class rewards( LeggedRobotCfg.rewards ):
         class scales( LeggedRobotCfg.rewards.scales ):
             termination = -0.0
-            tracking_lin_vel = 2.0 #1.0
-            tracking_ang_vel = 1.5 #0.5
+            tracking_lin_vel = 1.5 #1.0
+            tracking_ang_vel = 1.0 #0.5
             lin_vel_z = -2.0
             ang_vel_xy = -0.05 # -0.05
             orientation = -5.0  #-0.
@@ -110,9 +110,9 @@ class BigReddogRoughCfg( LeggedRobotCfg ):
             feet_air_time =  1.0 # 1.5
             collision = -0.00
             feet_stumble = -0.0
-            action_rate = -0.00125 #-0.01
+            action_rate = -0.01 #-0.01
             stand_still = -0.05
-            foot_clearance = -0.1
+            foot_clearance = -0.0
             
         only_positive_rewards = True # if true negative total rewards are clipped at zero (avoids early termination problems)
         tracking_sigma = 0.25 # tracking reward = exp(-error^2/sigma)

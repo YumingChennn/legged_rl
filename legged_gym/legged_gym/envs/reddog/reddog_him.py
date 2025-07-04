@@ -11,12 +11,12 @@ from .reddog_him_config import ReddogHimRoughCfg
 class ReddogHimRough(LeggedRobot):
     cfg : ReddogHimRoughCfg
     def __init__(self, cfg, sim_params, physics_engine, sim_device, headless):
-        super().__init__(cfg, sim_params, physics_engine, sim_device, headless)
-        
-        if self.cfg.control.use_actuator_network:
-            actuator_network_path = self.cfg.control.actuator_net_file.format(LEGGED_GYM_ROOT_DIR=LEGGED_GYM_ROOT_DIR)
-            self.actuator_network = torch.jit.load(actuator_network_path).to(self.device)
-        
+            super().__init__(cfg, sim_params, physics_engine, sim_device, headless)
+            
+            if self.cfg.control.use_actuator_network:
+                actuator_network_path = self.cfg.control.actuator_net_file.format(LEGGED_GYM_ROOT_DIR=LEGGED_GYM_ROOT_DIR)
+                self.actuator_network = torch.jit.load(actuator_network_path).to(self.device)
+            
     def _init_buffers(self):
         super()._init_buffers()
         self.actuator_net_input = torch.zeros(self.num_envs*self.num_actions, 6, device=self.device, requires_grad=False)
