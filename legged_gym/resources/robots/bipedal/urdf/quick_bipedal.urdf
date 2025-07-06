@@ -228,7 +228,7 @@
   </link>
   <joint
     name="R_wheel_joint"
-    type="revolute">
+    type="continuous">
     <origin
       xyz="0 -0.0425499999999996 -0.179999728516744"
       rpy="0 0 0" />
@@ -421,7 +421,7 @@
   </link>
   <joint
     name="L_wheel_joint"
-    type="revolute">
+    type="continuous">
     <origin
       xyz="0 0.0425499999999973 -0.179999728516743"
       rpy="0 0 0" />

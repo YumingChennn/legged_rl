@@ -33,9 +33,9 @@ from legged_gym.envs.base.him_robot_config import LeggedRobotCfg, LeggedRobotCfg
 class BipedalHimRoughCfg( LeggedRobotCfg ):
     class env( LeggedRobotCfg.env ):
         num_envs = 4096
-        num_one_step_observations = 28  # command[:4], base_ang_vel, projected_gravity, pos, vel, actioins
+        num_one_step_observations = 25  # command[:4], base_ang_vel, projected_gravity, pos(6-2), vel(6), actioins
         num_observations = num_one_step_observations * 6
-        num_one_step_privileged_obs = 28 + 3 + 3 + 187 # additional: base_lin_vel, external_forces, scan_dots
+        num_one_step_privileged_obs = 25 + 3 + 3 + 187 # additional: base_lin_vel, external_forces, scan_dots
         num_privileged_obs = num_one_step_privileged_obs * 1 # if not None a priviledge_obs_buf will be returned by step() (critic obs for assymetric training). None is returned otherwise 
         num_actions = 6
         env_spacing = 3.  # not used with heightfields/trimeshes 
@@ -81,7 +81,7 @@ class BipedalHimRoughCfg( LeggedRobotCfg ):
     class commands( LeggedRobotCfg.commands ):
         curriculum = True
         max_curriculum = 3.0
-        num_commands = 5 # default: lin_vel_x, lin_vel_y, ang_vel_yaw, heading (in heading mode ang_vel_yaw is recomputed from heading error)
+        num_commands = 4 # default: lin_vel_x, lin_vel_y, ang_vel_yaw, heading (in heading mode ang_vel_yaw is recomputed from heading error)
         resampling_time = 10. # time before command are changed[s]
         heading_command = True # if true: compute ang vel command from heading error
         init_height = 0.18
@@ -90,7 +90,7 @@ class BipedalHimRoughCfg( LeggedRobotCfg ):
             lin_vel_y = [0.0, 0.0]   # min max [m/s]
             ang_vel_yaw = [-3.14, 3.14]    # min max [rad/s]
             heading = [-3.14, 3.14]
-            height = [0.1, 0.25]
+            # height = [0.1, 0.25]
 
     class terrain( LeggedRobotCfg.terrain ):
         mesh_type = 'plane'
@@ -108,13 +108,14 @@ class BipedalHimRoughCfg( LeggedRobotCfg ):
   
     class rewards( LeggedRobotCfg.rewards ):
         class scales:
-            tracking_lin_vel = 1.0
-            tracking_lin_vel_enhance = 1
+            tracking_lin_vel = 2.0
+            # tracking_lin_vel_enhance = 1.0
             tracking_ang_vel = 1.0
 
-            base_height = 1.0
-            nominal_state = 0.5
-            lin_vel_z = -2.0
+            base_height = -1.0
+            nominal_state_thigh = -1.0
+            nominal_state_calf = -0.5
+            lin_vel_z = -1.0
             ang_vel_xy = -0.05
             orientation = -10.0
 

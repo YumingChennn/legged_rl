@@ -47,25 +47,34 @@ class BipedalHimRough(LeggedRobot):
                                         self.commands[:, 4:5] * self.obs_scales.height_measurements,
                                         self.base_ang_vel  * self.obs_scales.ang_vel,
                                         self.projected_gravity,
-                                        (self.dof_pos - self.default_dof_pos) * self.obs_scales.dof_pos,
+                                        (self.dof_pos[:, :2] - self.default_dof_pos[:, :2]) * self.obs_scales.dof_pos,
+                                        (self.dof_pos[:, 3:5] - self.default_dof_pos[:, 3:5]) * self.obs_scales.dof_pos,
                                         self.dof_vel * self.obs_scales.dof_vel,
                                         self.actions,
                                         ),dim=-1)
-            # add noise if needed (configured for height command)
-            if self.add_noise:
-                current_obs += (2 * torch.rand_like(current_obs) - 1) * self.noise_scale_vec[0:(10 + 3 * self.num_actions)]
-
-            # add perceptive inputs if not blind
-            current_obs = torch.cat((current_obs, self.base_lin_vel * self.obs_scales.lin_vel, self.disturbance[:, 0, :]), dim=-1)
-            if self.cfg.terrain.measure_heights:
-                heights = torch.clip(self.root_states[:, 2].unsqueeze(1) - 0.5 - self.measured_heights, -1, 1.) * self.obs_scales.height_measurements 
-                heights += (2 * torch.rand_like(heights) - 1) * self.noise_scale_vec[(9 + 3 * self.num_actions):(9 + 3 * self.num_actions+187)]
-                current_obs = torch.cat((current_obs, heights), dim=-1)
-
-            self.obs_buf = torch.cat((current_obs[:, :self.num_one_step_obs], self.obs_buf[:, :-self.num_one_step_obs]), dim=-1)
-            self.privileged_obs_buf = torch.cat((current_obs[:, :self.num_one_step_privileged_obs], self.privileged_obs_buf[:, :-self.num_one_step_privileged_obs]), dim=-1)
         else:
-            super().compute_observations()
+            current_obs = torch.cat((   self.commands[:, :3] * self.commands_scale,
+                                        self.base_ang_vel  * self.obs_scales.ang_vel,
+                                        self.projected_gravity,
+                                        (self.dof_pos[:, :2] - self.default_dof_pos[:, :2]) * self.obs_scales.dof_pos,
+                                        (self.dof_pos[:, 3:5] - self.default_dof_pos[:, 3:5]) * self.obs_scales.dof_pos,
+                                        self.dof_vel * self.obs_scales.dof_vel,
+                                        self.actions,
+                                        ),dim=-1)
+        # add noise if needed (configured for height command)
+        if self.add_noise:
+            current_obs += (2 * torch.rand_like(current_obs) - 1) * self.noise_scale_vec[0:self.num_one_step_obs]
+
+        # add perceptive inputs if not blind
+        current_obs = torch.cat((current_obs, self.base_lin_vel * self.obs_scales.lin_vel, self.disturbance[:, 0, :]), dim=-1)
+        if self.cfg.terrain.measure_heights:
+            heights = torch.clip(self.root_states[:, 2].unsqueeze(1) - 0.5 - self.measured_heights, -1, 1.) * self.obs_scales.height_measurements 
+            heights += (2 * torch.rand_like(heights) - 1) * self.noise_scale_vec[self.num_one_step_obs:(self.num_one_step_obs+187)]
+            current_obs = torch.cat((current_obs, heights), dim=-1)
+
+        self.obs_buf = torch.cat((current_obs[:, :self.num_one_step_obs], self.obs_buf[:, :-self.num_one_step_obs]), dim=-1)
+        self.privileged_obs_buf = torch.cat((current_obs[:, :self.num_one_step_privileged_obs], self.privileged_obs_buf[:, :-self.num_one_step_privileged_obs]), dim=-1)
+ 
 
     def compute_termination_observations(self, env_ids):
         if self.cfg.commands.num_commands == 5:
@@ -73,46 +82,60 @@ class BipedalHimRough(LeggedRobot):
                                         self.commands[:, 4:5] * self.obs_scales.height_measurements,
                                         self.base_ang_vel  * self.obs_scales.ang_vel,
                                         self.projected_gravity,
-                                        (self.dof_pos - self.default_dof_pos) * self.obs_scales.dof_pos,
+                                        (self.dof_pos[:, :2] - self.default_dof_pos[:, :2]) * self.obs_scales.dof_pos,
+                                        (self.dof_pos[:, 3:5] - self.default_dof_pos[:, 3:5]) * self.obs_scales.dof_pos,
                                         self.dof_vel * self.obs_scales.dof_vel,
                                         self.actions,
                                         ),dim=-1)
-            # add noise if needed (configured for height command)
-            if self.add_noise:
-                current_obs += (2 * torch.rand_like(current_obs) - 1) * self.noise_scale_vec[0:(10 + 3 * self.num_actions)]
-
-            # add perceptive inputs if not blind
-            current_obs = torch.cat((current_obs, self.base_lin_vel * self.obs_scales.lin_vel, self.disturbance[:, 0, :]), dim=-1)
-            if self.cfg.terrain.measure_heights:
-                heights = torch.clip(self.root_states[:, 2].unsqueeze(1) - 0.5 - self.measured_heights, -1, 1.) * self.obs_scales.height_measurements 
-                heights += (2 * torch.rand_like(heights) - 1) * self.noise_scale_vec[(10 + 3 * self.num_actions):(10 + 3 * self.num_actions+187)]
-                current_obs = torch.cat((current_obs, heights), dim=-1)
-
-            return torch.cat((current_obs[:, :self.num_one_step_privileged_obs], self.privileged_obs_buf[:, :-self.num_one_step_privileged_obs]), dim=-1)[env_ids]
         else:
-            return super().compute_termination_observations(env_ids)
-    
+            current_obs = torch.cat((   self.commands[:, :3] * self.commands_scale,
+                                        self.base_ang_vel  * self.obs_scales.ang_vel,
+                                        self.projected_gravity,
+                                        (self.dof_pos[:, :2] - self.default_dof_pos[:, :2]) * self.obs_scales.dof_pos,
+                                        (self.dof_pos[:, 3:5] - self.default_dof_pos[:, 3:5]) * self.obs_scales.dof_pos,
+                                        self.dof_vel * self.obs_scales.dof_vel,
+                                        self.actions,
+                                        ),dim=-1)
+        # add noise if needed (configured for height command)
+        if self.add_noise:
+            current_obs += (2 * torch.rand_like(current_obs) - 1) * self.noise_scale_vec[0:self.num_one_step_obs]
+
+        # add perceptive inputs if not blind
+        current_obs = torch.cat((current_obs, self.base_lin_vel * self.obs_scales.lin_vel, self.disturbance[:, 0, :]), dim=-1)
+        if self.cfg.terrain.measure_heights:
+            heights = torch.clip(self.root_states[:, 2].unsqueeze(1) - 0.5 - self.measured_heights, -1, 1.) * self.obs_scales.height_measurements 
+            heights += (2 * torch.rand_like(heights) - 1) * self.noise_scale_vec[self.num_one_step_obs:(self.num_one_step_obs+187)]
+            current_obs = torch.cat((current_obs, heights), dim=-1)
+
+        return torch.cat((current_obs[:, :self.num_one_step_privileged_obs], self.privileged_obs_buf[:, :-self.num_one_step_privileged_obs]), dim=-1)[env_ids]
+
     def _get_noise_scale_vec(self, cfg):
+        if self.cfg.terrain.measure_heights:
+            noise_vec = torch.zeros((self.num_one_step_obs+187), device=self.device)
+        else:
+            noise_vec = torch.zeros(self.num_one_step_obs, device=self.device)
+        self.add_noise = self.cfg.noise.add_noise
+        noise_scales = self.cfg.noise.noise_scales
+        noise_level = self.cfg.noise.noise_level
+
         if self.cfg.commands.num_commands == 5:
-            if self.cfg.terrain.measure_heights:
-                noise_vec = torch.zeros(10 + 3*self.num_actions + 187, device=self.device)
-            else:
-                noise_vec = torch.zeros(10 + 3*self.num_actions, device=self.device)
-            self.add_noise = self.cfg.noise.add_noise
-            noise_scales = self.cfg.noise.noise_scales
-            noise_level = self.cfg.noise.noise_level
             noise_vec[0:4] = 0. # commands
             noise_vec[4:7] = noise_scales.ang_vel * noise_level * self.obs_scales.ang_vel
             noise_vec[7:10] = noise_scales.gravity * noise_level
-            noise_vec[10:(10 + self.num_actions)] = noise_scales.dof_pos * noise_level * self.obs_scales.dof_pos
-            noise_vec[(10 + self.num_actions):(10 + 2 * self.num_actions)] = noise_scales.dof_vel * noise_level * self.obs_scales.dof_vel
-            noise_vec[(10 + 2 * self.num_actions):(10 + 3 * self.num_actions)] = 0. # previous actions
-            if self.cfg.terrain.measure_heights:
-                noise_vec[(10 + 3 * self.num_actions):(10 + 3 * self.num_actions + 187)] = noise_scales.height_measurements* noise_level * self.obs_scales.height_measurements
-            #noise_vec[232:] = 0
-            return noise_vec
+            noise_vec[10:14] = noise_scales.dof_pos * noise_level * self.obs_scales.dof_pos
+            noise_vec[14:20] = noise_scales.dof_vel * noise_level * self.obs_scales.dof_vel
+            noise_vec[20:26] = 0. # previous actions
         else:
-            return super()._get_noise_scale_vec(cfg)
+            noise_vec[0:3] = 0. # commands
+            noise_vec[3:6] = noise_scales.ang_vel * noise_level * self.obs_scales.ang_vel
+            noise_vec[6:9] = noise_scales.gravity * noise_level
+            noise_vec[9:13] = noise_scales.dof_pos * noise_level * self.obs_scales.dof_pos
+            noise_vec[13:19] = noise_scales.dof_vel * noise_level * self.obs_scales.dof_vel
+            noise_vec[19:25] = 0. # previous actions
+        if self.cfg.terrain.measure_heights:
+            noise_vec[self.num_one_step_obs:(self.num_one_step_obs + 187)] = noise_scales.height_measurements* noise_level * self.obs_scales.height_measurements
+            
+        return noise_vec
             
 
     def _resample_commands(self, env_ids):
@@ -228,21 +251,18 @@ class BipedalHimRough(LeggedRobot):
                 raise NameError(f"Unknown controller type: {control_type}")
 
     # ------------ reward functions----------------
-    def _reward_tracking_lin_vel_enhance(self):
-        # Tracking of linear velocity commands (x axes)
-        lin_vel_error = torch.sum(torch.square(self.commands[:, :2] - self.base_lin_vel[:, :2]), dim=1)
-        return torch.exp(-lin_vel_error / self.cfg.rewards.tracking_sigma / 10) - 1
+    # def _reward_tracking_lin_vel_enhance(self):
+    #     # Tracking of linear velocity commands (x axes)
+    #     lin_vel_error = torch.sum(torch.square(self.commands[:, :2] - self.base_lin_vel[:, :2]), dim=1)
+    #     return torch.exp(-lin_vel_error / self.cfg.rewards.tracking_sigma / 10) - 1
     
-    def _reward_nominal_state(self):
-        # return torch.square(self.theta0[:, 0] - self.theta0[:, 1])
-        # if self.reward_scales["nominal_state"] < 0:
-        #     return torch.square(self.dof_pos[:, 0] - self.dof_pos[:, 3])
-        # else:
-        #     ang_diff = torch.square(self.dof_pos[:, 0] - self.dof_pos[:, 3])
-        #     return torch.exp(-ang_diff / 0.1)
-        hip_diff = self.dof_pos[:, 0] - self.dof_pos[:, 3]
-        knee_diff = self.dof_pos[:, 1] - self.dof_pos[:, 4]
-        return torch.exp(- (hip_diff**2 + knee_diff**2) / 0.1)
+    def _reward_nominal_state_thigh(self):
+        diff = self.dof_pos[:, 0] - self.dof_pos[:, 3]
+        return torch.square(diff)
+    
+    def _reward_nominal_state_calf(self):
+        diff = self.dof_pos[:, 1] - self.dof_pos[:, 4]
+        return torch.square(diff)
     
     def _reward_dof_vel(self):
         # Penalize dof velocities
@@ -285,12 +305,16 @@ class BipedalHimRough(LeggedRobot):
         return torch.sum(out_of_limits, dim=1)
     
     def _reward_base_height(self):
+        base_height = self._get_base_heights()
         if self.cfg.commands.num_commands == 5:
-            base_height = self._get_base_heights()
             if self.reward_scales["base_height"] < 0:
-                return torch.abs(base_height - self.commands[:, 4])
+                return torch.square(base_height - self.commands[:, 4])
             else:
                 base_height_error = torch.square(base_height - self.commands[:, 4])
                 return torch.exp(-base_height_error / 0.001)
         else:
-            return super()._reward_base_height()
+            if self.reward_scales["base_height"] < 0:
+                return torch.square(base_height - self.cfg.rewards.base_height_target)
+            else:
+                base_height_error = torch.square(base_height - self.cfg.rewards.base_height_target)
+                return torch.exp(-base_height_error / 0.001)
